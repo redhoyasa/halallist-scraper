@@ -1,5 +1,6 @@
 import scrapy
 from HTMLParser import HTMLParser
+from datetime import datetime
 
 
 class HalalMUIItem(scrapy.Item):
@@ -56,8 +57,11 @@ class HalalMUISpider(scrapy.Spider):
                     item['name'] = h.unescape(product_row.xpath('span/h4/text()').extract_first())
                     item['certificate_number'] = product_details[0].split(' : ')[-1]
                     item['category'] = response.meta['category']
-                    item['producer'] = h.unescape(product_details[1].split(' : ')[-1])
-                    item['expiration_date'] = product_details[2].split(' : ')[-1]
+                    item['producer'] = h.unescape(
+                        product_details[1].split(' : ')[-1])
+                    item['expiration_date'] = datetime.strptime(
+                        product_details[2].split(' : ')[-1],
+                        '%d %B %Y')
 
                     yield item
 
