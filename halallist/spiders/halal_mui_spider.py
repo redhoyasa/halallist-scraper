@@ -54,14 +54,14 @@ class HalalMUISpider(scrapy.Spider):
                 product_details = product_row.xpath('span/text()').extract()
                 if product_details:
                     item = HalalMUIItem()
-                    item['name'] = h.unescape(product_row.xpath('span/h4/text()').extract_first())
-                    item['certificate_number'] = product_details[0].split(' : ')[-1]
+                    item['name'] = h.unescape(product_row.xpath('span/h4/text()').extract_first()).strip()
+                    item['certificate_number'] = product_details[0].split(' : ')[-1].strip()
                     item['category'] = response.meta['category']
                     item['producer'] = h.unescape(
-                        product_details[1].split(' : ')[-1])
+                        product_details[1].split(' : ')[-1]).strip()
                     item['expiration_date'] = datetime.strptime(
                         product_details[2].split(' : ')[-1],
-                        '%d %B %Y')
+                        '%d %B %Y').date()
 
                     yield item
 
